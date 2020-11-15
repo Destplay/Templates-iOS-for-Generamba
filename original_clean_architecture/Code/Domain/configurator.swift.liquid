@@ -1,0 +1,27 @@
+//
+//  {{ module_info.name }}{{ module_info.file_name }}
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright © {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+
+class {{ module_info.name }}Configurator {
+
+    private var presenter: {{ module_info.name }}PresenterDataSource!
+    
+    init() {
+        let dataServices = {{ module_info.name }}MockServices(.success)
+        let repository = {{ module_info.name }}Repository(dataSource: dataServices)
+        let interactor = {{ module_info.name }}Interactor(dataSource: repository)
+        self.presenter = {{ module_info.name }}Presenter(dataSource: interactor)
+    }
+    
+    func getDataSource() -> {{ module_info.name }}PresenterDataSource {
+        
+        return self.presenter
+    }
+    
+}

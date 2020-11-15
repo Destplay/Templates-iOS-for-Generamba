@@ -1,0 +1,105 @@
+//
+//  {{ module_info.name }}{{ module_info.file_name }}
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright © {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+
+protocol {{ module_info.name }}ViewViewer: class {
+    func response(_ model: {{ module_info.name }}ViewModel)
+    func response(_ error: NSError)
+}
+
+protocol {{ module_info.name }}PresenterDataSource: class {
+    func fetch(objectFor view: {{ module_info.name }}ViewViewer)
+}
+
+protocol {{ module_info.name }}PresenterViewer: class {
+    func response(_ model: {{ module_info.name }}Model)
+    func response(_ error: NSError)
+}
+
+protocol {{ module_info.name }}InteractorDataSource: class {
+    func fetch(objectFor presenter: {{ module_info.name }}PresenterViewer)
+}
+
+protocol {{ module_info.name }}InteractorViewer: class {
+    func response(_ model: {{ module_info.name }}Model)
+    func response(_ error: NSError)
+}
+
+protocol {{ module_info.name }}RepositoryDataSource: class {
+    func getInfo(successful: @escaping ({{ module_info.name }}Model) -> (), failure: (NSError) -> ())
+}
+
+protocol {{ module_info.name }}ServicesDataSource: class {
+    func getInfo(successful: @escaping ({{ module_info.name }}Model) -> (), failure: (NSError) -> ())
+}
+
+/// Перечисление моковых json
+/// - success: Положительный ответ
+/// - empty: Ссписок пуст
+enum {{ module_info.name }}JsonMockType {
+    case success, empty, error
+    
+    /// Метод для получения названия json файла
+    ///
+    /// - Returns: Название ввиде текста
+    func getNameFile() -> String {
+        switch(self) {
+            case .success: return "{{ module_info.name }}Success"
+            case .empty: return "{{ module_info.name }}Empty"
+            case .error: return "{{ module_info.name }}Error"
+        }
+    }
+}
+
+struct {{ module_info.name }}ViewModel {
+    let text: String
+    
+    init(_ model: {{ module_info.name }}Model) {
+        self.text = model.content.text
+    }
+}
+
+struct {{ module_info.name }}Model {
+    var content: Content
+    
+    struct Content {
+        var text: String
+        
+        init(_ text: String) {
+            self.text = text
+        }
+        
+        mutating func logic() {
+            self.text = text + " " + "bussiness logic"
+        }
+    }
+    
+    init(_ content: {{ module_info.name }}Model.Content) {
+        self.content = content
+    }
+}
+
+struct {{ module_info.name }}RequestModel: Encodable {
+    var parameter: Int
+}
+
+struct {{ module_info.name }}ResponseModel: Decodable {
+    let status: String
+    let content: Response?
+    let error: Error?
+    
+    struct Response: Decodable {
+        let text: String
+    }
+    
+    struct Error: Decodable {
+        let reason: String
+        let code: Int
+    }
+}

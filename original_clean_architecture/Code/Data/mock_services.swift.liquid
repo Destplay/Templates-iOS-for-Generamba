@@ -1,0 +1,72 @@
+//
+//  {{ module_info.name }}{{ module_info.file_name }}
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright © {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+
+class {{ module_info.name }}MockServices: {{ module_info.name }}ServicesDataSource {
+    
+    var mockFile: {{ module_info.name }}JsonMockType
+    
+    init(_ mockFile: {{ module_info.name }}JsonMockType) {
+        self.mockFile = mockFile
+    }
+    
+    func getInfo(successful: @escaping ({{ module_info.name }}Model) -> (), failure: (NSError) -> ()) {
+        ///simulates a network response
+        
+        guard let data = MockManager.fileJson(fileName: self.mockFile.getNameFile()) else {
+            let error = NSError(domain: "ru.destplay.TechDemo", code: 991, userInfo: ["reason": "Данные не найдены"])
+            failure(error)
+            return
+        }
+        
+        MockManager.parseJson(data: data, success: { (modelResponse: {{ module_info.name }}ResponseModel) in
+            if modelResponse.status == "SUCCESS" {
+                if let text = modelResponse.content?.text {
+                    let model = {{ module_info.name }}Model({{ module_info.name }}Model.Content(text))
+                    successful(model)
+                } else {
+                    let error = NSError(domain: "ru.destplay.TechDemo", code: 999, userInfo: ["reason": "empty"])
+                    failure(error)
+                }
+            } else {
+                guard let responseError = modelResponse.error else { return }
+                let error = NSError(domain: "ru.destplay.TechDemo", code: responseError.code, userInfo: ["reason": responseError.reason])
+                failure(error)
+            }
+        }, failure: failure)
+    }
+    
+}
+
+class MockManager {
+    static func fileJson(fileName: String) -> Data? {
+        do {
+            guard let file = Bundle.main.url(forResource: fileName, withExtension: "json") else {
+                return nil
+            }
+            let data = try Data(contentsOf: file)
+            
+            print(String(data: data, encoding: .utf8) ?? "")
+            
+            return data
+        } catch {
+            
+            return nil
+        }
+    }
+    
+    static func parseJson<T: Decodable>(data: Data, success: ((T) -> ()), failure: ((NSError) -> ())) {
+        do {
+            let model = try JSONDecoder().decode(T.self, from: data)
+            success(model)
+        } catch {
+            failure(error as NSError)
+        }
+    }
+}

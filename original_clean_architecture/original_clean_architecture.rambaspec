@@ -1,0 +1,28 @@
+# Template information section
+name: "original_clean_architecture"
+summary: "Clean architecture for iOS platform"
+author: "Destplay"
+version: "0.0.1"
+license: "MIT"
+
+# The declarations for code files
+
+code_files:
+# Presentation layer
+- {name: Presentation/Presenter.swift, path: Code/Presentation/presenter.swift.liquid}
+- {name: Presentation/View.swift,  path: Code/Presentation/view.swift.liquid}
+- {name: Presentation/.storyboard, path: Code/Presentation/storyboard.storyboard.liquid}
+
+# Domain layer
+- {name: Domain/Model.swift, path: Code/Domain/model.swift.liquid}
+- {name: Domain/Configurator.swift, path: Code/Domain/configurator.swift.liquid}
+- {name: Domain/Interactor.swift, path: Code/Domain/interactor.swift.liquid}
+
+# Data layer
+- {name: Data/Mock/Success.json, path: Code/Data/Mock/success.json.liquid}
+- {name: Data/Mock/Empty.json, path: Code/Data/Mock/empty.json.liquid}
+- {name: Data/Mock/Error.json, path: Code/Data/Mock/error.json.liquid}
+- {name: Data/Repository.swift, path: Code/Data/repository.swift.liquid}
+- {name: Data/NetworkServices.swift, path: Code/Data/network_services.swift.liquid}
+- {name: Data/MockServices.swift, path: Code/Data/mock_services.swift.liquid}
+

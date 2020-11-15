@@ -1,0 +1,32 @@
+//
+//  {{ module_info.name }}{{ module_info.file_name }}
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright © {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+
+class {{ module_info.name }}NetworkServices: {{ module_info.name }}ServicesDataSource {
+    
+    func getInfo(successful: @escaping ({{ module_info.name }}Model) -> (), failure: (NSError) -> ()) {
+        ///simulates a network response
+        let content = {{ module_info.name }}ResponseModel.Response(text: "Network response")
+        let modelResponse = {{ module_info.name }}ResponseModel(status: "SUCCESS", content: content, error: nil)
+        if modelResponse.status == "SUCCESS" {
+            if let text = modelResponse.content?.text {
+                let model = {{ module_info.name }}Model({{ module_info.name }}Model.Content(text))
+                successful(model)
+            } else {
+                let error = NSError(domain: "ru.destplay.TechDemo", code: 999, userInfo: ["reason": "empty"])
+                failure(error)
+            }
+        } else {
+            guard let responseError = modelResponse.error else { return }
+            let error = NSError(domain: "ru.destplay.TechDemo", code: responseError.code, userInfo: ["reason": responseError.reason])
+            failure(error)
+        }
+    }
+    
+}
